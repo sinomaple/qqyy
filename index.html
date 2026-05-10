@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-src 'none'; child-src 'none'; worker-src 'none'; manifest-src 'self'; block-all-mixed-content">
+    <meta name="referrer" content="no-referrer">
+    <title>QQYY Remote Desktop Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="home-page">
+    <canvas class="matrix-rain" aria-hidden="true"></canvas>
+    <header>
+        <nav>
+            <button class="menu-toggle" type="button" aria-label="Open navigation menu" aria-controls="site-navigation" aria-expanded="false" data-menu-toggle>
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="site-navigation">
+                <li><a href="index.html">Gateway</a></li>
+                <li><a href="names.html">Hosts</a></li>
+                <li><a href="about.html">Broker</a></li>
+                <li><a href="contact.html">Audit</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="gateway-shell">
+        <section class="gateway-screen" aria-labelledby="gateway-title">
+            <div class="gateway-copy">
+                <p class="eyebrow">QQYY Remote Desktop Gateway</p>
+                <h2 id="gateway-title">Session broker locked.</h2>
+                <p class="hero-copy">Remote workspace handoff requires a trusted device certificate.</p>
+                <div class="terminal-line" aria-label="Gateway route">
+                    <span>rdg:</span>
+                    <strong>qqyy.org / 443</strong>
+                </div>
+                <div class="protocol-strip" aria-label="Gateway protocols">
+                    <span>RDP</span>
+                    <span>RDG</span>
+                    <span>TLS</span>
+                    <span>LOCKED</span>
+                </div>
+            </div>
+
+            <form class="login-panel" autocomplete="off" data-access-form>
+                <div class="login-panel-header">
+                    <span>RDG://QQYY-BROKER</span>
+                    <span data-access-clock>--:--:--</span>
+                </div>
+                <label>
+                    <span>workspace</span>
+                    <input type="text" value="QQYY-PRIVATE" autocomplete="off" spellcheck="false" aria-label="Workspace" readonly>
+                </label>
+                <label>
+                    <span>domain user</span>
+                    <input type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="Domain user">
+                </label>
+                <label>
+                    <span>session key</span>
+                    <input type="password" autocomplete="off" aria-label="Session key">
+                </label>
+                <button class="button login-button" type="submit">Connect</button>
+                <p class="access-status" aria-live="polite" data-access-status>status: waiting for gateway handshake</p>
+            </form>
+        </section>
+
+        <section class="status-grid" aria-label="Gateway status">
+            <article>
+                <span class="status-light"></span>
+                <h3>RD Gateway</h3>
+                <p>online</p>
+            </article>
+            <article>
+                <span class="status-light"></span>
+                <h3>Host Pool</h3>
+                <p>hidden</p>
+            </article>
+            <article>
+                <span class="status-light"></span>
+                <h3>Certificate</h3>
+                <p>required</p>
+            </article>
+        </section>
+    </main>
+    <footer>
+        <p>QQYY_RDG // remote session attempts are logged</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
