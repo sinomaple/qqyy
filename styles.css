@@ -22,11 +22,20 @@
     --border: rgba(0, 255, 106, 0.42);
     --shadow: rgba(0, 255, 106, 0.24);
     --terminal-glow: 0 0 5px rgba(0, 255, 106, 0.42), 0 0 16px rgba(0, 255, 106, 0.18);
+    --rain-fade: rgba(1, 4, 2, 0.054);
+    --rain-head: #f3fff6;
+    --rain-mid: #9dffb8;
+    --rain-body: #20f06b;
+    --rain-shadow: #00ff6a;
     --max: 1120px;
 }
 
 html {
     background: var(--bg);
+}
+
+html[data-theme="day"] {
+    background: #edf8ef;
 }
 
 body {
@@ -48,6 +57,34 @@ body * {
     text-shadow: inherit;
 }
 
+body[data-theme="day"] {
+    --bg: #edf8ef;
+    --bg-soft: rgba(240, 252, 243, 0.86);
+    --panel: rgba(245, 255, 248, 0.82);
+    --panel-strong: rgba(255, 255, 255, 0.66);
+    --grid: rgba(0, 118, 50, 0.13);
+    --green: #007a35;
+    --green-soft: #0b6232;
+    --cyan: #006f84;
+    --amber: #8d6500;
+    --violet: #514aa6;
+    --ink: #062515;
+    --muted: #446452;
+    --border: rgba(0, 122, 53, 0.36);
+    --shadow: rgba(0, 122, 53, 0.18);
+    --terminal-glow: 0 0 2px rgba(0, 122, 53, 0.18), 0 0 12px rgba(0, 122, 53, 0.1);
+    --rain-fade: rgba(238, 250, 241, 0.075);
+    --rain-head: #ffffff;
+    --rain-mid: #0c7b38;
+    --rain-body: #138846;
+    --rain-shadow: rgba(0, 122, 53, 0.42);
+    background:
+        radial-gradient(circle at 18% 8%, rgba(0, 122, 53, 0.16), transparent 30rem),
+        radial-gradient(circle at 54% 40%, rgba(89, 246, 255, 0.12), transparent 27rem),
+        radial-gradient(circle at 88% 72%, rgba(248, 214, 109, 0.15), transparent 26rem),
+        linear-gradient(180deg, #f7fff8, #dcefe2 54%, #f4fff6);
+}
+
 a,
 button,
 input {
@@ -58,6 +95,10 @@ input {
     color: #001806;
     background: var(--green);
     text-shadow: none;
+}
+
+body[data-theme="day"] ::selection {
+    color: #f7fff8;
 }
 
 body::before {
@@ -85,6 +126,17 @@ body::after {
     background-size: 100% 4px, 100% 100%;
 }
 
+body[data-theme="day"]::before {
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.74), transparent 82%);
+}
+
+body[data-theme="day"]::after {
+    background:
+        linear-gradient(rgba(0, 70, 30, 0.035) 50%, rgba(255, 255, 255, 0.025) 50%),
+        radial-gradient(circle at center, transparent 48%, rgba(255, 255, 255, 0.34));
+    background-size: 100% 4px, 100% 100%;
+}
+
 .matrix-rain {
     position: fixed;
     inset: 0;
@@ -92,6 +144,11 @@ body::after {
     width: 100%;
     height: 100%;
     opacity: 0.78;
+}
+
+body[data-theme="day"] .matrix-rain {
+    opacity: 0.56;
+    mix-blend-mode: multiply;
 }
 
 header {
@@ -102,6 +159,11 @@ header {
     background: rgba(0, 8, 4, 0.82);
     box-shadow: 0 10px 34px rgba(0, 0, 0, 0.42);
     backdrop-filter: blur(12px);
+}
+
+body[data-theme="day"] header {
+    background: rgba(241, 252, 244, 0.84);
+    box-shadow: 0 10px 34px rgba(28, 83, 48, 0.14);
 }
 
 header nav {
@@ -125,6 +187,66 @@ header nav {
     place-items: center;
     gap: 5px;
     padding: 0;
+}
+
+body[data-theme="day"] .menu-toggle {
+    background: rgba(245, 255, 248, 0.9);
+}
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 4.5rem;
+    min-height: 2.28rem;
+    padding: 0.4rem 0.62rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--green-soft);
+    background: rgba(0, 24, 12, 0.76);
+    box-shadow: inset 0 0 14px rgba(0, 255, 106, 0.06);
+    cursor: pointer;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+}
+
+.theme-toggle::before {
+    content: "";
+    width: 0.42rem;
+    height: 0.42rem;
+    margin-right: 0.42rem;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 12px var(--shadow);
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+    border-color: var(--green);
+    color: var(--ink);
+    background: rgba(0, 255, 106, 0.12);
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+}
+
+.theme-toggle[data-theme-mode="day"]::before {
+    background: var(--amber);
+}
+
+.theme-toggle[data-theme-mode="night"]::before {
+    background: var(--cyan);
+}
+
+body[data-theme="day"] .theme-toggle {
+    background: rgba(255, 255, 255, 0.62);
+}
+
+body[data-theme="day"] .theme-toggle:hover,
+body[data-theme="day"] .theme-toggle:focus-visible {
+    color: #062515;
+    background: rgba(0, 122, 53, 0.14);
 }
 
 .menu-toggle span {
@@ -196,6 +318,18 @@ main {
     overflow: hidden;
 }
 
+body[data-theme="day"] main {
+    background:
+        linear-gradient(180deg, rgba(0, 122, 53, 0.08), transparent 5rem),
+        repeating-linear-gradient(0deg, rgba(0, 122, 53, 0.028) 0, rgba(0, 122, 53, 0.028) 1px, transparent 1px, transparent 9px),
+        rgba(245, 255, 248, 0.5);
+    box-shadow:
+        0 0 0 1px rgba(0, 122, 53, 0.08),
+        0 18px 48px rgba(34, 91, 56, 0.16),
+        inset 0 0 52px rgba(0, 122, 53, 0.055),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.72);
+}
+
 main::before {
     content: "QQYY_RDG> CONNECTION_BROKER_READY";
     position: absolute;
@@ -212,6 +346,17 @@ main::before {
     box-shadow: inset 0 -1px 0 rgba(231, 255, 240, 0.06), 0 0 22px rgba(0, 255, 106, 0.12);
     font-size: 0.86rem;
     text-transform: uppercase;
+}
+
+body[data-theme="night"] main::before {
+    content: "QQYY_RDG> AUTO_NIGHT_ROUTE_ACTIVE";
+}
+
+body[data-theme="day"] main::before {
+    content: "QQYY_RDG> AUTO_DAY_ROUTE_ACTIVE";
+    color: var(--green-soft);
+    background: rgba(239, 253, 243, 0.94);
+    box-shadow: inset 0 -1px 0 rgba(0, 122, 53, 0.08), 0 0 22px rgba(0, 122, 53, 0.1);
 }
 
 main::after {
@@ -260,6 +405,10 @@ main::after {
     text-transform: uppercase;
 }
 
+body[data-theme="day"] .protocol-strip span {
+    background: rgba(255, 255, 255, 0.42);
+}
+
 .login-panel {
     display: grid;
     gap: 1rem;
@@ -273,6 +422,15 @@ main::after {
         0 0 36px rgba(0, 255, 106, 0.14),
         inset 0 0 28px rgba(0, 255, 106, 0.06);
     backdrop-filter: blur(2px);
+}
+
+body[data-theme="day"] .login-panel {
+    background:
+        linear-gradient(180deg, rgba(0, 122, 53, 0.08), transparent 3.5rem),
+        rgba(251, 255, 252, 0.62);
+    box-shadow:
+        0 16px 34px rgba(39, 86, 56, 0.12),
+        inset 0 0 28px rgba(0, 122, 53, 0.05);
 }
 
 .login-panel.is-denied {
@@ -310,6 +468,10 @@ main::after {
     font: inherit;
     padding: 0.7rem 0.75rem;
     outline: none;
+}
+
+body[data-theme="day"] .login-panel input {
+    background: rgba(255, 255, 255, 0.64);
 }
 
 .login-panel input:focus {
@@ -351,6 +513,10 @@ main::after {
     animation: terminalPulse 4.8s steps(2, end) infinite;
 }
 
+body[data-theme="day"] .eyebrow {
+    background: rgba(248, 214, 109, 0.16);
+}
+
 h2 {
     max-width: 880px;
     color: var(--ink);
@@ -359,6 +525,10 @@ h2 {
     font-weight: 700;
     text-shadow: 0 0 6px rgba(231, 255, 240, 0.5), 0 0 28px rgba(0, 255, 106, 0.42);
     animation: terminalFlicker 7.5s steps(1, end) infinite;
+}
+
+body[data-theme="day"] h2 {
+    text-shadow: 0 0 3px rgba(255, 255, 255, 0.8), 0 0 18px rgba(0, 122, 53, 0.16);
 }
 
 .hero-copy,
@@ -375,6 +545,12 @@ h2 {
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.34);
     box-shadow: 0 0 34px rgba(0, 255, 106, 0.1), inset 0 0 22px rgba(0, 255, 106, 0.04);
+}
+
+body[data-theme="day"] .terminal-line,
+body[data-theme="day"] .terminal-card {
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 12px 30px rgba(38, 91, 58, 0.1), inset 0 0 22px rgba(0, 122, 53, 0.045);
 }
 
 .terminal-line,
@@ -456,6 +632,10 @@ footer {
     text-decoration: none;
 }
 
+body[data-theme="day"] .button {
+    color: #f7fff8;
+}
+
 .button:hover,
 .button:focus-visible {
     background: var(--green-soft);
@@ -479,6 +659,13 @@ footer {
     background: rgba(5, 25, 15, 0.38);
     box-shadow: 0 18px 56px rgba(0, 0, 0, 0.32), inset 0 0 18px rgba(0, 255, 106, 0.04);
     backdrop-filter: blur(1.5px);
+}
+
+body[data-theme="day"] .status-grid article,
+body[data-theme="day"] .feature-list article,
+body[data-theme="day"] .page-panel {
+    background: rgba(247, 255, 249, 0.54);
+    box-shadow: 0 18px 48px rgba(36, 86, 55, 0.12), inset 0 0 18px rgba(0, 122, 53, 0.04);
 }
 
 .status-grid article,
@@ -512,8 +699,10 @@ h3 {
 
 .page-panel {
     display: grid;
+    align-content: center;
     gap: 1rem;
-    max-width: 900px;
+    width: 100%;
+    min-height: 470px;
     padding: 2rem;
 }
 
@@ -545,6 +734,10 @@ footer {
     backdrop-filter: blur(10px);
 }
 
+body[data-theme="day"] footer {
+    background: rgba(241, 252, 244, 0.9);
+}
+
 .matrix-game-overlay {
     position: fixed;
     inset: 0;
@@ -554,6 +747,10 @@ footer {
     padding: 1rem;
     background: rgba(0, 0, 0, 0.52);
     backdrop-filter: blur(5px);
+}
+
+body[data-theme="day"] .matrix-game-overlay {
+    background: rgba(238, 250, 241, 0.58);
 }
 
 .matrix-game-terminal {
@@ -567,6 +764,15 @@ footer {
         0 0 42px rgba(0, 255, 106, 0.34),
         inset 0 0 46px rgba(0, 255, 106, 0.08);
     overflow: hidden;
+}
+
+body[data-theme="day"] .matrix-game-terminal {
+    background:
+        linear-gradient(180deg, rgba(0, 122, 53, 0.08), transparent 5rem),
+        rgba(247, 255, 249, 0.76);
+    box-shadow:
+        0 24px 58px rgba(30, 77, 48, 0.2),
+        inset 0 0 46px rgba(0, 122, 53, 0.07);
 }
 
 .matrix-game-terminal:focus {
@@ -585,6 +791,10 @@ footer {
     text-transform: uppercase;
 }
 
+body[data-theme="day"] .matrix-game-bar {
+    background: rgba(239, 253, 243, 0.92);
+}
+
 .matrix-game-close,
 .matrix-game-restart {
     border: 1px solid var(--border);
@@ -593,6 +803,11 @@ footer {
     background: rgba(0, 20, 8, 0.7);
     cursor: pointer;
     text-transform: uppercase;
+}
+
+body[data-theme="day"] .matrix-game-close,
+body[data-theme="day"] .matrix-game-restart {
+    background: rgba(255, 255, 255, 0.58);
 }
 
 .matrix-game-close {
@@ -644,6 +859,10 @@ footer {
     box-shadow: inset 0 0 36px rgba(0, 255, 106, 0.08);
 }
 
+body[data-theme="day"] .matrix-game-canvas {
+    background: rgba(255, 255, 255, 0.42);
+}
+
 .matrix-game-radar {
     display: grid;
     align-content: start;
@@ -661,12 +880,22 @@ footer {
     box-shadow: inset 0 0 28px rgba(0, 255, 106, 0.08);
 }
 
+body[data-theme="day"] .matrix-game-radar {
+    background:
+        repeating-linear-gradient(0deg, rgba(0, 122, 53, 0.045) 0, rgba(0, 122, 53, 0.045) 1px, transparent 1px, transparent 8px),
+        rgba(255, 255, 255, 0.42);
+}
+
 .matrix-radar-canvas {
     display: block;
     width: 100%;
     aspect-ratio: 1;
     border: 1px solid rgba(0, 255, 106, 0.28);
     background: rgba(0, 0, 0, 0.38);
+}
+
+body[data-theme="day"] .matrix-radar-canvas {
+    background: rgba(255, 255, 255, 0.48);
 }
 
 .matrix-game-help {
@@ -783,6 +1012,7 @@ footer {
     }
 
     .page-panel {
+        min-height: auto;
         padding: 1.25rem;
     }
 

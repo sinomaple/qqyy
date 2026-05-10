@@ -1,15 +1,73 @@
 const rainGlyphs = '010101QQYYVEILROOTSIGILRABBIT#$_+-=<>[]{}';
 const rainWords = ['RDP', 'RDG', 'BROKER', 'TLS', 'CERT', 'SESSION', 'DESKTOP', 'DENIED', 'QQYY', 'LOCKED', 'HOST'];
 const rainFrameDelay = 82;
+const dayStartHour = 7;
+const nightStartHour = 19;
+const themeModes = ['auto', 'day', 'night'];
+const themeStorageKey = 'qqyy-theme-mode';
 let matrixAudioContext;
 let matrixAudioGain;
 
 document.addEventListener('DOMContentLoaded', () => {
+    setupAutoTheme();
     setupMobileMenu();
     setupMatrixRain();
     setupInternalGateway();
     setupMatrixGameEasterEgg();
 });
+
+function setupAutoTheme() {
+    const toggle = document.querySelector('[data-theme-toggle]');
+    let selectedMode = getStoredThemeMode();
+
+    const updateTheme = () => {
+        const theme = selectedMode === 'auto' ? getAutoTheme() : selectedMode;
+
+        document.documentElement.dataset.theme = theme;
+        document.body.dataset.theme = theme;
+        document.body.dataset.themeMode = selectedMode;
+        document.documentElement.style.colorScheme = theme === 'day' ? 'light' : 'dark';
+
+        if (toggle) {
+            toggle.textContent = selectedMode.toUpperCase();
+            toggle.dataset.themeMode = selectedMode;
+            toggle.setAttribute('aria-label', `Theme mode: ${selectedMode}`);
+        }
+    };
+
+    if (toggle) {
+        toggle.addEventListener('click', () => {
+            selectedMode = themeModes[(themeModes.indexOf(selectedMode) + 1) % themeModes.length];
+            storeThemeMode(selectedMode);
+            updateTheme();
+        });
+    }
+
+    updateTheme();
+    window.setInterval(updateTheme, 60000);
+}
+
+function getAutoTheme() {
+    const hour = new Date().getHours();
+    return hour >= dayStartHour && hour < nightStartHour ? 'day' : 'night';
+}
+
+function getStoredThemeMode() {
+    try {
+        const storedMode = window.localStorage.getItem(themeStorageKey);
+        return themeModes.includes(storedMode) ? storedMode : 'auto';
+    } catch (error) {
+        return 'auto';
+    }
+}
+
+function storeThemeMode(mode) {
+    try {
+        window.localStorage.setItem(themeStorageKey, mode);
+    } catch (error) {
+        // Ignore private browsing or locked storage.
+    }
+}
 
 function setupMobileMenu() {
     const toggle = document.querySelector('[data-menu-toggle]');
@@ -79,7 +137,14 @@ function setupMatrixRain() {
         lastDraw = timestamp;
         frame += 1;
 
-        context.fillStyle = 'rgba(1, 4, 2, 0.054)';
+        const themeStyle = getComputedStyle(document.body);
+        const rainFade = themeStyle.getPropertyValue('--rain-fade').trim() || 'rgba(1, 4, 2, 0.054)';
+        const rainHead = themeStyle.getPropertyValue('--rain-head').trim() || '#f3fff6';
+        const rainMid = themeStyle.getPropertyValue('--rain-mid').trim() || '#9dffb8';
+        const rainBody = themeStyle.getPropertyValue('--rain-body').trim() || '#20f06b';
+        const rainShadow = themeStyle.getPropertyValue('--rain-shadow').trim() || '#00ff6a';
+
+        context.fillStyle = rainFade;
         context.fillRect(0, 0, width, height);
         context.font = `${fontSize}px "Courier New", monospace`;
 
@@ -87,8 +152,8 @@ function setupMatrixRain() {
             const glyph = column.word ? column.word[Math.floor(frame / 2) % column.word.length] : pickRainGlyph();
             const isHead = (frame + index) % 9 === 0;
 
-            context.fillStyle = isHead ? '#f3fff6' : index % 5 === 0 ? '#9dffb8' : '#20f06b';
-            context.shadowColor = '#00ff6a';
+            context.fillStyle = isHead ? rainHead : index % 5 === 0 ? rainMid : rainBody;
+            context.shadowColor = rainShadow;
             context.shadowBlur = isHead ? 22 : 8;
             context.fillText(glyph, column.x, column.y);
 
