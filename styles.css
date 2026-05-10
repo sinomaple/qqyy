@@ -738,6 +738,34 @@ body[data-theme="day"] footer {
     background: rgba(241, 252, 244, 0.9);
 }
 
+.visitor-counter {
+    display: inline-block;
+    margin-top: 0.34rem;
+    padding: 0.18rem 0.5rem;
+    border: 1px solid rgba(89, 246, 255, 0.45);
+    border-radius: 4px;
+    color: var(--cyan);
+    background: rgba(0, 0, 0, 0.28);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+}
+
+.visitor-counter[hidden] {
+    display: none;
+}
+
+.visitor-counter strong {
+    color: var(--green-soft);
+}
+
+.visitor-counter.is-revealed {
+    animation: terminalPulse 1.4s steps(2, end) 2;
+}
+
+body[data-theme="day"] .visitor-counter {
+    background: rgba(255, 255, 255, 0.46);
+}
+
 .matrix-game-overlay {
     position: fixed;
     inset: 0;

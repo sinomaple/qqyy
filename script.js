@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupAutoTheme();
     setupMobileMenu();
     setupMatrixRain();
+    setupVisitorCounter();
+    setupVisitorCounterEasterEgg();
     setupInternalGateway();
     setupMatrixGameEasterEgg();
 });
@@ -269,6 +271,99 @@ function playMatrixSound(kind) {
     if (kind === 'lose') {
         playMatrixTone(220, 0.2, { type: 'sawtooth', volume: 0.16, endFrequency: 82 });
     }
+}
+
+function setupVisitorCounter() {
+    const counter = document.querySelector('[data-visitor-counter]');
+    const countOutput = document.querySelector('[data-visitor-count]');
+
+    if (!counter || !countOutput || !window.fetch) {
+        return;
+    }
+
+    fetch('/api/visit', {
+        method: 'POST',
+        cache: 'no-store',
+        credentials: 'same-origin',
+        headers: {
+            Accept: 'application/json'
+        }
+    })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Visitor count unavailable');
+            }
+
+            return response.json();
+        })
+        .then((data) => {
+            const visitors = Number(data && data.visitors);
+
+            if (!Number.isFinite(visitors) || visitors < 0) {
+                return;
+            }
+
+            countOutput.textContent = visitors.toLocaleString();
+            counter.dataset.counterState = 'ready';
+        })
+        .catch(() => {
+            countOutput.textContent = 'offline';
+            counter.dataset.counterState = 'offline';
+        });
+}
+
+function setupVisitorCounterEasterEgg() {
+    const counter = document.querySelector('[data-visitor-counter]');
+    const footer = document.querySelector('footer');
+    const secretCode = 'count';
+    let typedCode = '';
+    let footerClicks = 0;
+
+    if (!counter) {
+        return;
+    }
+
+    document.addEventListener('keydown', (event) => {
+        const activeTag = document.activeElement ? document.activeElement.tagName : '';
+
+        if (document.body.classList.contains('matrix-game-open') || ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag)) {
+            return;
+        }
+
+        if (event.key.length !== 1) {
+            return;
+        }
+
+        typedCode = `${typedCode}${event.key.toLowerCase()}`.slice(-secretCode.length);
+
+        if (typedCode === secretCode) {
+            typedCode = '';
+            revealVisitorCounter();
+        }
+    });
+
+    if (footer) {
+        footer.addEventListener('click', () => {
+            footerClicks += 1;
+
+            if (footerClicks >= 4) {
+                footerClicks = 0;
+                revealVisitorCounter();
+            }
+        });
+    }
+}
+
+function revealVisitorCounter() {
+    const counter = document.querySelector('[data-visitor-counter]');
+
+    if (!counter) {
+        return;
+    }
+
+    counter.hidden = false;
+    counter.classList.add('is-revealed');
+    playMatrixSound('collect');
 }
 
 function setupInternalGateway() {
@@ -687,6 +782,7 @@ function launchMatrixGame() {
 
                 if (score >= 7) {
                     finished = true;
+                    revealVisitorCounter();
                     playMatrixSound('win');
                 }
             }
